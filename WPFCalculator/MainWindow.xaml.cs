@@ -40,7 +40,7 @@ namespace WPFCalculator
         private void Number_Click(object sender, RoutedEventArgs e)
         {
             Button b = (Button) sender;
-            DisplayResult.Content = b.Content.ToString();
+            DisplayResult.Text = b.Content.ToString();
             
         }
     }
