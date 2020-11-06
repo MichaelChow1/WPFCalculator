@@ -31,6 +31,7 @@ namespace WPFCalculator
         }
         double firstNumber;
         double lastNumber;
+        double result;
 
         public MainWindow()
         {
@@ -47,13 +48,13 @@ namespace WPFCalculator
             {
                 DisplayResult.Text = "";
             }
-            else if(DisplayResult.Text == lastNumber.ToString())
+            else if (DisplayResult.Text == lastNumber.ToString())
             {
                 DisplayResult.Text = "";
+                
             }
-
             DisplayResult.Text += number;
-            firstNumber = double.Parse(number);
+            firstNumber = double.Parse(DisplayResult.Text);
 
 
         }
@@ -97,28 +98,38 @@ namespace WPFCalculator
         {
             if (_selectedOperator == SelectedOperator.Addition)
             {
-                DisplayResult.Text = MathService.Addition(firstNumber, lastNumber).ToString();
+                result = MathService.Addition(firstNumber, lastNumber);
+                DisplayResult.Text = result.ToString();
+                
             }
             else if (_selectedOperator == SelectedOperator.Subtraction)
             {
-                DisplayResult.Text = MathService.Subtract(lastNumber, firstNumber).ToString();
+                result = MathService.Subtract(lastNumber, firstNumber);
+                DisplayResult.Text = result.ToString();
+               
             }
             else if (_selectedOperator == SelectedOperator.Division)
             {
-                DisplayResult.Text = MathService.Divide(lastNumber, firstNumber).ToString();
+                result = MathService.Divide(lastNumber, firstNumber);
+                DisplayResult.Text = result.ToString();
                 if (firstNumber == 0)
                 {
-                    DisplayResult.Text = "Cannot divide by 0";
+                    MessageBox.Show("Cannot divide by 0", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    DisplayResult.Text = "0";
                     firstNumber = 0;
                     lastNumber = 0;
                     _selectedOperator = null;
                 }
+                
             }
             else if (_selectedOperator == SelectedOperator.Multiplication)
             {
-                DisplayResult.Text = MathService.Multiply(lastNumber, firstNumber).ToString();
+                result = MathService.Multiply(lastNumber, firstNumber);
+                DisplayResult.Text = result.ToString();
             }
 
+            lastNumber = result;
+            _selectedOperator = null;
 
         }
 
@@ -128,18 +139,34 @@ namespace WPFCalculator
             DisplayResult.Text = "0";
             firstNumber = 0;
             lastNumber = 0;
+            result = 0;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Percent_Click(object sender, RoutedEventArgs e)
         {
 
+            if (lastNumber != 0)
+            {
+                string number = DisplayResult.Text;
+                DisplayResult.Text = ((lastNumber / 100) * double.Parse(number)).ToString();
+                firstNumber= double.Parse(DisplayResult.Text);
+            }
+            else if(lastNumber == 0)
+            {
+                DisplayResult.Text = (firstNumber * 0.01).ToString();
+                firstNumber = double.Parse(DisplayResult.Text);
+            }
         }
-
         private void Negative_Positive_Click(object sender, RoutedEventArgs e)
         {
-
+            double number = double.Parse(DisplayResult.Text) * -1;
+            DisplayResult.Text = number.ToString() ;
         }
 
-
+        private void Period_Click(object sender, RoutedEventArgs e)
+        {
+            if (!DisplayResult.Text.Contains("."))
+                DisplayResult.Text += ".";
+        }
     }
 }
